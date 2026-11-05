@@ -39,7 +39,7 @@ type User struct {
 u := visibility.NewUser("小登", 18)
 u.Name    // 可以
 u.Age()   // 可以
-u.age     // 编译错误：cannot refer to unexported name
+u.age     // 编译错误：cannot refer to unexported accountvalidator
 u.grow()  // 编译错误
 ```
 

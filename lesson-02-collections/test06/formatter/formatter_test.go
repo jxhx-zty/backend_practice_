@@ -23,8 +23,8 @@ func TestTextAndJSONFormatters(t *testing.T) {
 	if err != nil {
 		t.Fatalf("JSONFormatter.Format() error = %v", err)
 	}
-	if jsonText != `{"name":"Lin","score":95}` {
-		t.Fatalf("JSONFormatter.Format() = %q, want %q", jsonText, `{"name":"Lin","score":95}`)
+	if jsonText != `{"accountvalidator":"Lin","score":95}` {
+		t.Fatalf("JSONFormatter.Format() = %q, want %q", jsonText, `{"accountvalidator":"Lin","score":95}`)
 	}
 }
 
@@ -39,7 +39,7 @@ func TestFormatAllUsesTheInterface(t *testing.T) {
 	if err != nil {
 		t.Fatalf("FormatAll() error = %v", err)
 	}
-	want := []string{"Lin: 95", `{"name":"Lin","score":95}`}
+	want := []string{"Lin: 95", `{"accountvalidator":"Lin","score":95}`}
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("FormatAll() = %#v, want %#v", got, want)
 	}

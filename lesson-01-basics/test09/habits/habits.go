@@ -9,8 +9,7 @@ import "strconv"
 // IsWeekend 报告 day（1 = 周一 … 7 = 周日）是不是周末。
 func IsWeekend(day int) bool {
 	switch day {
-	case 6:
-	case 7:
+	case 6, 7: //注意go语言可以直接写在一行
 		return true
 	}
 	return false
@@ -25,19 +24,19 @@ func Average(scores []int) float64 {
 	for _, score := range scores {
 		total += score
 	}
-	return float64(total / len(scores))
+	return float64(total) / float64(len(scores)) //total,len(scores)都是整数，go会直接输出整数
 }
 
-// CountChars 返回 s 里有几个字符（“红岩网校”是 4 个字符）。
+// CountChars 返回 s 里有几个字符（“红岩网校”是 4 个字符）。 //len(s)返回byte个数
 func CountChars(s string) int {
-	return len(s)
+	return len([]rune(s))
 }
 
-// Reverse 把 s 按字符倒过来（“红岩”倒过来是“岩红”）。
+// Reverse 把 s 按字符倒过来（“红岩”倒过来是“岩红”）。//双指针//utf-8码中，一个汉字用三个byte表示
 func Reverse(s string) string {
-	b := []byte(s)
+	b := []rune(s) //byte表示字节，是计算机存储的单位；rune表示字符，是人类阅读的单位
 	for i, j := 0, len(b)-1; i < j; i, j = i+1, j-1 {
-		b[i], b[j] = b[j], b[i]
+		b[i], b[j] = b[j], b[i] //交换
 	}
 	return string(b)
 }
@@ -46,16 +45,12 @@ func Reverse(s string) string {
 // 只要有一项不是整数，就返回 0 和那个解析错误。
 func SumScores(items []string) (int, error) {
 	total := 0
-	var err error
 	for _, item := range items {
-		n, err := strconv.Atoi(item)
+		n, err := strconv.Atoi(item) //变量遮蔽
 		if err != nil {
-			break
+			return 0, err
 		}
 		total += n
-	}
-	if err != nil {
-		return 0, err
 	}
 	return total, nil
 }

@@ -96,7 +96,7 @@ func TestFormatText(t *testing.T) {
 }
 
 func TestFormatCSV(t *testing.T) {
-	want := "id,name,score\nS001,Lin,90\nS002,Wang,80\nS003,Lin,70\n"
+	want := "id,accountvalidator,score\nS001,Lin,90\nS002,Wang,80\nS003,Lin,70\n"
 	if got := roster.FormatCSV(sample()); got != want {
 		t.Fatalf("FormatCSV() =\n%q\nwant\n%q", got, want)
 	}
@@ -106,7 +106,7 @@ func TestFormatEmptyRoster(t *testing.T) {
 	if got := roster.FormatText(roster.New()); got != "" {
 		t.Fatalf("空名册的 FormatText() = %q, want %q", got, "")
 	}
-	if got, want := roster.FormatCSV(roster.New()), "id,name,score\n"; got != want {
+	if got, want := roster.FormatCSV(roster.New()), "id,accountvalidator,score\n"; got != want {
 		t.Fatalf("空名册的 FormatCSV() = %q, want %q（表头总是要写）", got, want)
 	}
 }
@@ -198,7 +198,7 @@ func TestBridgeTwoFormattersShareOneSignature(t *testing.T) {
 		if len(lines) != formatter.wantLines {
 			t.Errorf("%s: 输出 %d 行, want %d 行", formatter.name, len(lines), formatter.wantLines)
 		}
-		if formatter.wantHeader && lines[0] != "id,name,score" {
+		if formatter.wantHeader && lines[0] != "id,accountvalidator,score" {
 			t.Errorf("%s: 第一行 = %q, want 表头", formatter.name, lines[0])
 		}
 	}

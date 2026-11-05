@@ -4,7 +4,7 @@ import "encoding/json"
 
 // Student 是格式化器的输入。
 type Student struct {
-	Name  string `json:"name"`
+	Name  string `json:"accountvalidator"`
 	Score int    `json:"score"`
 }
 
