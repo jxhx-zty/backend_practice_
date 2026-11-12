@@ -7,12 +7,17 @@ package aliasing
 //
 // 调用方可能会对返回值继续 append，这不能改写 values 后面的元素。
 func Head(values []int, n int) []int {
+	if n < 0 {
+		return []int{}
+	}
 	if n > len(values) {
 		n = len(values)
 	}
 	// BUG: 返回的窗口 cap 仍然延伸到 values 的末尾，
 	// 调用方一 append，就原地写进了 values[n]。
-	return values[:n]
+	v := make([]int, n)
+	copy(v, values)
+	return v
 }
 
 // Branch 在同一个前缀 base 后面分别追加 a 和 b，返回两条互相独立的路径。
@@ -22,8 +27,15 @@ func Head(values []int, n int) []int {
 func Branch(base []string, a, b string) ([]string, []string) {
 	// BUG: base 的 cap 有富余时，两次 append 写的是同一个位置，
 	// 第二次会把第一次的结果覆盖掉。
-	left := append(base, a)
-	right := append(base, b)
+	left := make([]string, len(base), len(base)+1)
+	copy(left, base)
+	left = append(left, a)
+	right := make([]string, len(base), len(base)+1)
+	copy(right, base)
+	right = append(right, b)
+	//三索引切片
+	//left := append(base[:len(base):len(base)], a)
+	//right := append(base[:len(base):len(base)], b)
 	return left, right
 }
 
@@ -33,12 +45,15 @@ func Branch(base []string, a, b string) ([]string, []string) {
 func RemoveIf(values []int, drop func(int) bool) []int {
 	// BUG 1: 边遍历边删除，删掉 i 之后下一个元素挪到了 i，却被 i++ 跳过。
 	// BUG 2: append(values[:i], values[i+1:]...) 是原地挪动，调用方的数据被改乱了。
-	for i := 0; i < len(values); i++ {
-		if drop(values[i]) {
-			values = append(values[:i], values[i+1:]...)
+	v := make([]int, len(values))
+	copy(v, values)
+	for i := 0; i < len(v); i++ {
+		if drop(v[i]) {
+			v = append(v[:i], v[i+1:]...)
+			i--
 		}
 	}
-	return values
+	return v
 }
 
 // Student 是一条名册记录。
@@ -53,8 +68,8 @@ type Student struct {
 func Pointers(students []Student) []*Student {
 	result := make([]*Student, 0, len(students))
 	// BUG: range 给出的 student 是元素的副本，&student 指向的是副本，不是切片里的那一格。
-	for _, student := range students {
-		result = append(result, &student)
+	for i := range students {
+		result = append(result, &students[i])
 	}
 	return result
 }
@@ -72,8 +87,9 @@ func Chunk(values []int, size int) [][]int {
 		if end > len(values) {
 			end = len(values)
 		}
-		// BUG: 每一段的 cap 都延伸到 values 末尾，和后面几段共享同一块底层数组。
-		chunks = append(chunks, values[start:end])
+		// BUG: 每一段的 cap 都延伸到 values 末尾，和后面几段共享同一块底层数组。十分重要且隐蔽
+		//a := base
+		chunks = append(chunks, values[start:end:end])
 	}
 	return chunks
 }

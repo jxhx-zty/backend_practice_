@@ -41,5 +41,9 @@ func (c *Cache) Len() int {
 // 调用方修改返回的 map 不应该影响 Cache。
 func (c *Cache) Snapshot() map[string]int {
 	// TODO: 创建新 map，把 c.values 的键值逐个复制进去。
-	return c.values
+	newCache := make(map[string]int, len(c.values))
+	for i, j := range c.values {
+		newCache[i] = j
+	}
+	return newCache
 }

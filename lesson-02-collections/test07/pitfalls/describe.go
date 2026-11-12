@@ -1,8 +1,17 @@
 package pitfalls
 
+import (
+	"fmt"
+	"reflect"
+)
+
 // Point 是平面上的一个点。
 type Point struct {
 	X, Y int
+}
+
+func (p Point) String() string {
+	return fmt.Sprintf("(%d, %d)", p.X, p.Y)
 }
 
 // TODO: 给 Point 实现 fmt.Stringer，让 fmt.Sprint(Point{1, 2}) 输出 "(1, 2)"。
@@ -18,7 +27,23 @@ type Point struct {
 //	其他                -> "other: " + 类型名（用 %T，例如 "other: float64"）
 func Describe(v any) string {
 	// TODO: switch x := v.(type) { ... }
-	return ""
+	switch value := v.(type) {
+	case nil:
+		return "nil"
+	case error:
+		return "error: " + value.Error()
+	case fmt.Stringer:
+		return "stringer: " + value.String()
+	case int:
+		return fmt.Sprintf("int: %d", value)
+	case string:
+		return fmt.Sprintf("string: %q", value)
+	case []int:
+		return fmt.Sprintf("[]int of len %d", len(value))
+	default:
+		return fmt.Sprintf("other: %T", value)
+
+	}
 }
 
 // SafeEqual 比较两个 any 是否相等。
@@ -27,5 +52,18 @@ func Describe(v any) string {
 //
 // BUG: 直接写 a == b，两边都是切片时会 panic: runtime error: comparing uncomparable type。
 func SafeEqual(a, b any) (equal bool, comparable bool) {
+	if a == nil || b == nil {
+		return a == b, true
+	}
+	t := reflect.TypeOf(a)
+	z := reflect.TypeOf(b)
+
+	if t != z {
+		return false, true
+	}
+	if !t.Comparable() {
+		return false, false
+	}
+
 	return a == b, true
 }

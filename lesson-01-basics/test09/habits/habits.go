@@ -36,7 +36,7 @@ func CountChars(s string) int {
 func Reverse(s string) string {
 	b := []rune(s) //byte表示字节，是计算机存储的单位；rune表示字符，是人类阅读的单位
 	for i, j := 0, len(b)-1; i < j; i, j = i+1, j-1 {
-		b[i], b[j] = b[j], b[i] //交换
+		b[i], b[j] = b[j], b[i] //重复交换，使切片倒过来排
 	}
 	return string(b)
 }

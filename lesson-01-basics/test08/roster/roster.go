@@ -95,7 +95,7 @@ func (r *Roster) TotalScoreByName(name string) int {
 func FormatText(r *Roster) string {
 	var builder strings.Builder //申请一个缓冲池
 	// TODO: 遍历 r.students，用 fmt.Sprintf("%s %s %d\n", ...) 拼出每一行，
-	// 再用 builder.WriteString 写进去，最后 return builder.String()。
+	// 再用 builder.WriteString 写进去，最后 return builder.String()。//再用builder.String返回
 	for _, s := range r.students {
 		builder.WriteString(fmt.Sprintf("%s %s %d\n", s.ID, s.Name, s.Score))
 	}
